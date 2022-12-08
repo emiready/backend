@@ -4,62 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>listar</title>
 </head>
 <body>
-
-    <button type="submit"><a href="index.html">Inicio</a></button>
-    <button type="submit"><a href="listar.php">Listar ropa</a></button>
-    <button type="submit"><a href="agregar.html">Agregar ropa</a></button>
-    <h2>Lista de ropa</h2>
-    <p>La siguiente lista muestra los datos de la ropa actualmente en stock.</p>
     <table border="1">
+<h1>TIENDA DE ROPA</h1>
+    <button type="submit"><a href="index.html">inicio</a></button>
+    <button type="submit"><a href="insert.html">agregar</a></button>
+   
+    <h2>Lista de ropa</h2>
+    <p><b>ROPA EN STOCK</b></p>
     <tr>
         <th>ID</th>
-        <th>TIPO DE PRENDA</th>
+        <th>TIPO DE ROPA</th>
         <th>MARCA</th>
         <th>TALLE</th>
         <th>PRECIO</th>
         <th>IMAGEN</th>
-        <th>EDITAR</th>
-        <th>BORRAR</th>
+        <th>MODIFICAR</th>
+        <th>ELIMINAR</th>
     </tr>
     <?php
-    // 1) Conexion
-    $conexion = mysqli_connect("127.0.0.1", "root", "");
-    mysqli_select_db($conexion, "emilianomodas");
+    $conexion=mysqli_connect("127.0.0.1","root","");
+    mysqli_select_db($conexion,"emilianomodas");
 
-    // 2) Preparar la orden SQL
-    // Sintaxis SQL SELECT
-    // SELECT * FROM nombre_tabla
-    // => Selecciona todos los campos de la siguiente tabla
-    // SELECT campos_tabla FROM nombre_tabla
-    // => Selecciona los siguientes campos de la siguiente tabla
     $consulta= "SELECT*FROM ropa";
 
-    // 3) Ejecutar la orden y obtenemos los registros
-    $datos= mysqli_query($conexion, $consulta);
+    $datos= mysqli_query ($conexion, $consulta);
 
-    
 
-    // 4) Mostrar los datos del registro
-    while ($reg=mysqli_fetch_array($datos)) { ?>
+
+    while ( $fila =mysqli_fetch_array($datos)) { ?>
         <tr>
-        <td><?php echo $reg["Id"]; ?></td>
-        <td><?php echo $reg["Tipodeprenda"]; ?></td>
-        <td><?php echo $reg["Marca"]; ?></td>
-        <td><?php echo $reg["Talle"]; ?></td>
-        <td><?php echo $reg["Precio"]; ?></td>
-       
-        <!-- <td><button onclick="location.href='modificar.php?id=<?php echo $reg['id'];?>'">modificar</button></td>   
-        <td><button onclick="location.href='delete.php?id=<?php echo $reg['id'];?>'">borrar</button></td>
-        </tr> -->
-    <?php } ?>  
-    
-
-   
+        <td><?php echo $fila['id'];?></td>
+        <td><?php echo $fila['prenda'];?></td>
+        <td><?php echo $fila['marca'];?></td>
+        <td><?php echo $fila['talle'];?></td>
+        <td><?php echo $fila['precio'];?></td>
+        <td><img src="data:imagen/jpg;base64, <?php echo base64_encode($fila['imagen'])?>" alt="" width="100px" height="100px"></td>
+        <td><button onclick="location.href='modificar.php?id=<?php echo $fila['id'];?>'">modificar</button></td>   
+        <td><button onclick="location.href='delete.php?id=<?php echo $fila['id'];?>'">borrar</button></td> -->
+        </tr>
+   <?php } ?>
     </table>
-
 </body>
 </html>
-        

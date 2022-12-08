@@ -1,0 +1,204 @@
+<?php
+  $conexion = mysqli_connect("127.0.0.1", "root", "");
+  mysqli_select_db($conexion, "emilianomodas");
+
+  $id = $_GET['id'];
+
+  $consulta = "DELETE FROM `ropa` WHERE `id`=$id";
+
+  mysqli_query($conexion,$consulta);
+
+  // header('location: index.html');
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tienda ropa</title>
+  </head>
+  <body>
+    <h1>TIENDA DE ROPA</h1>
+    <button type="submit"><a href="listar.php">lista</a></button>
+    <button type="submit"><a href="insert.html">agregar</a></button>
+    <button type="submit"><a href="delete.php">borrar</a></button>
+    <button type="submit"><a href="modificar.php">modificar</a></button>
+  </body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda de Ropa</title>
+  </head>
+  <body>
+    <h1>Tienda de ropa: EMILIANO MODAS</h1>
+    <button type="submit"><a href="index.html">Inicio</a></button>
+    <button type="submit"><a href="listar.php">Listar ropa</a></button>
+    <button type="submit"><a href="insert.html">Agregar ropa</a></button>
+    <button type="submit"><a href="delete.php">borrar</a></button>
+    <button type="submit"><a href="modificar.php">modificar</a></button>
+    <h2>Agregar ropa</h2>
+    <p>Ingrese la informacion de la prenda, por favor.</p>
+
+    <form method="POST" action="insert.php" enctype="multipart/form-data">
+      <label>Tipo de prenda</label>
+      <input type="text" name="prenda" placeholder="Tipo de prenda" required />
+      <label>Marca</label>
+      <input type="text" name="marca" placeholder="Marca" required />
+      <label>Talle</label>
+      <input type="text" name="talle" placeholder="Talle" required />
+      <label>Precio</label>
+      <input type="text" name="precio" placeholder="Precio" required />
+      <label>Imagen</label>
+      <input type="file" name="imagen" placeholder="imagen" />
+      <input type="submit" name="submit" value="Ingresar" />
+    </form>
+  </body>
+</html>
+<?php
+
+$conexion=mysqli_connect("127.0.0.1","root","");
+mysqli_select_db($conexion,"emilianomodas");
+
+$prenda = $_POST ['prenda'];
+$marca = $_POST['marca'];
+$talle = $_POST['talle'];
+$precio = $_POST['precio'];
+$imagen = addslashes(file_get_contents($_FILES['imagen']['tmp_name']));
+
+  $consulta = "INSERT INTO ropa (id,prenda,marca,talle,precio,imagen)
+          VALUES ('','$prenda','$marca','$talle','$precio','$imagen')";
+
+
+  mysqli_query($conexion,$consulta);
+
+   header('location: index.html');
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>listar</title>
+</head>
+<body>
+    <table border="1">
+<h1>TIENDA DE ROPA</h1>
+    <button type="submit"><a href="index.html">inicio</a></button>
+    <button type="submit"><a href="insert.html">agregar</a></button>
+   
+    <h2>Lista de ropa</h2>
+    <p><b>ROPA EN STOCK</b></p>
+    <tr>
+        <th>ID</th>
+        <th>TIPO DE ROPA</th>
+        <th>MARCA</th>
+        <th>TALLE</th>
+        <th>PRECIO</th>
+        <th>IMAGEN</th>
+        <th>MODIFICAR</th>
+        <th>ELIMINAR</th>
+    </tr>
+    <?php
+    $conexion=mysqli_connect("127.0.0.1","root","");
+    mysqli_select_db($conexion,"emilianomodas");
+
+    $consulta= "SELECT*FROM ropa";
+
+    $datos= mysqli_query ($conexion, $consulta);
+
+
+
+    while ( $fila =mysqli_fetch_array($datos)) { ?>
+        <tr>
+        <td><?php echo $fila['id'];?></td>
+        <td><?php echo $fila['prenda'];?></td>
+        <td><?php echo $fila['marca'];?></td>
+        <td><?php echo $fila['talle'];?></td>
+        <td><?php echo $fila['precio'];?></td>
+        <td><img src="data:imagen/jpg;base64, <?php echo base64_encode($fila['imagen'])?>" alt="" width="100px" height="100px"></td>
+        <td><button onclick="location.href='modificar.php?id=<?php echo $fila['id'];?>'">modificar</button></td>   
+        <td><button onclick="location.href='delete.php?id=<?php echo $fila['id'];?>'">borrar</button></td> -->
+        </tr>
+   <?php } ?>
+    </table>
+</body>
+</html>
+<?php
+
+$conexion = mysqli_connect("127.0.0.1", "root", "");
+
+mysqli_select_db($conexion, "emilianomodas");
+
+$id = $_GET['id']; 
+
+
+$consulta = "SELECT * FROM ropa WHERE id=$id";
+
+$respuesta = mysqli_query($conexion, $consulta);
+
+
+$datos=mysqli_fetch_array($respuesta);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tienda de Ropa</title>
+    </head>
+    <body>
+        <?php
+       
+        $prenda=$datos["prenda"];
+        $marca=$datos["marca"];
+        $talle=$datos["talle"];
+        $precio=$datos["precio"];
+        $imagen=$datos['imagen'];?>
+
+        <h2>Modificar</h2>
+        <p>Ingrese los nuevos datos de la prenda.</p>
+        
+        <form action="" method="post" enctype="multipart/form-data">
+            <label>Tipo de prenda</label>
+            <input type="text" name="prenda" placeholder="Tipo de Prenda" value="<?php echo "$prenda"; ?>">
+            <label>Marca</label>
+            <input type="text" name="marca" placeholder="Marca" value="<?php echo "$marca"; ?>">
+            <label>Talle</label>
+            <input type="text" name="talle" placeholder="Talle" value="<?php echo "$talle"; ?>">
+            <label>Precio</label>
+            <input type="text" name="precio" placeholder="Precio" value="<?php echo "$precio"; ?>">
+            <label>Imagen</label>
+            <input type="file" name="imagen" placeholder="imagen">
+            <input type="submit" name="guardar_cambios" value="Guardar Cambios">
+            <button type="submit" name="Cancelar" formaction="index.html">Cancelar</button>
+        </form>
+        <?php
+        
+        if(array_key_exists('guardar_cambios',$_POST)){
+
+                    $prenda=$_POST['prenda'];
+                    $marca=$_POST['marca'];
+                    $talle=$_POST['talle'];
+                    $precio=$_POST['precio'];
+                    $imagen=addslashes(file_get_contents($_FILES['imagen']['tmp_name']));
+             $consulta = "UPDATE ropa SET prenda='$prenda', marca='$marca', talle='$talle', precio='$precio', imagen='$imagen' WHERE id =$id";
+
+           
+            mysqli_query($conexion,$consulta);
+
+            header('location: index.html');
+
+        }?>
+    </body>
+</html>
